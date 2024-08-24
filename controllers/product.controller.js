@@ -27,7 +27,10 @@ const getProducts = async (req, res) => {
       totalProducts,
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ 
+      message: "Oops! Something went wrong",
+      error: error.message
+     });
   }
 };
 
@@ -87,7 +90,10 @@ const createProduct = async (req, res) => {
     // Respond with the created product
     res.status(201).json({ product });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ 
+      message: "Oops! Something went wrong",
+      error: error.message
+     });
   }
 };
 
@@ -100,6 +106,21 @@ const updateProduct = async (req, res) => {
     // Validate ObjectId
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid product ID" });
+    }
+
+    // Validate updated inputs
+    const { name, price, category, inStock } = req.body;
+    if (!name || typeof name !== 'string') {
+      return res.status(400).json({ message: "Invalid product name" });
+    }
+    if (typeof price !== 'number' || price <= 0) {
+      return res.status(400).json({ message: "Invalid price" });
+    }
+    if (!category || typeof category !== 'string') {
+      return res.status(400).json({ message: "Invalid category" });
+    }
+    if (typeof inStock !== 'boolean') {
+      return res.status(400).json({ message: "Invalid stock status" });
     }
 
     // Update the product

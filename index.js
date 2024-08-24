@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const Product = require("./models/product.model.js");
+require("dotenv").config();
+
 const productRoute = require("./routes/product.route.js");
 const app = express();
 
@@ -10,11 +11,8 @@ app.use(express.json());
 //routes
 app.use("/api/products", productRoute);
 
-
 mongoose
-  .connect(
-    "mongodb+srv://delenta:delenta@nodeapi.pvtnh.mongodb.net/?retryWrites=true&w=majority&appName=nodeAPI"
-  )
+  .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("Connected to database!");
     app.listen(3000, () => {
@@ -25,3 +23,5 @@ mongoose
     console.log("Connection failed!");
   });
 0;
+
+module.exports = app;
